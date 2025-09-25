@@ -1,28 +1,92 @@
 {
-  "name": "Eletrize",
+  "name": "Eletrize - Smart Home Control",
   "short_name": "Eletrize", 
-  "version": "2025.01.23.001",
-  "start_url": "./index.html?v=1737455925",
+  "description": "Controle inteligente da sua casa com interface moderna e intuitiva",
+  "version": "2025.09.25.001",
+  "start_url": "./index.html?utm_source=pwa",
   "scope": "./",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#101010",
   "theme_color": "#1C1C1C",
+  "categories": ["lifestyle", "utilities", "productivity"],
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "images/pwa/app-icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "images/pwa/app-icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "images/pwa/app-icon-512-maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "images/pwa/screenshot-mobile-1.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "images/pwa/screenshot-desktop-1.png", 
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Cenários",
+      "short_name": "Cenários",
+      "description": "Acesso rápido aos cenários",
+      "url": "./scenes.html?shortcut=scenes",
+      "icons": [
+        {
+          "src": "images/icons/icon-scenes.svg",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Sala",
+      "short_name": "Sala",
+      "description": "Controles da sala",
+      "url": "./?page=sala&shortcut=room",
+      "icons": [
+        {
+          "src": "images/icons/icon-home.svg",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "share_target": {
+    "action": "./share-handler/",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+eletrize",
+      "url": "./?handler=%s"
     }
   ]
 }

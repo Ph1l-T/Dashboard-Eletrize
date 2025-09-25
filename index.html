@@ -2,13 +2,31 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eletrize</title>
-    <link rel="stylesheet" href="fonts-raleway.css">
-    <link rel="icon" href="images/pwa/app-icon-192.png" type="image/png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Eletrize - Smart Home Control</title>
+    <meta name="description" content="Controle inteligente da sua casa com interface moderna e intuitiva">
+    <meta name="keywords" content="smart home, automação, casa inteligente, eletrize">
+    <meta name="author" content="Eletrize">
+    
+    <!-- PWA Meta Tags -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1C1C1C">
+    <meta name="background-color" content="#101010">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Eletrize">
+    <meta name="msapplication-TileColor" content="#1C1C1C">
+    <meta name="msapplication-tap-highlight" content="no">
+    
+    <!-- Icons -->
+    <link rel="icon" href="images/pwa/app-icon-192.png" type="image/png">
     <link rel="apple-touch-icon" href="images/pwa/app-icon-192.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="images/pwa/app-icon-192.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="images/pwa/app-icon-512.png">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="fonts-raleway.css">
     <script>
         // Cache buster dinâmico para CSS
         document.write('<link rel="stylesheet" href="styles.css?cb=' + new Date().getTime() + Math.random().toString(36).substr(2, 9) + '">');
@@ -306,6 +324,11 @@
                             <img class="control-icon" id="master-light-toggle-icon" src="images/icons/icon-small-light-off.svg" alt="Master Light Toggle">
                             <div class="control-label" id="master-light-toggle-label">Ligar Tudo</div>
                         </div>
+                        
+                        <!-- Controle de Ar Condicionado -->
+                        <div style="grid-column: 1; display: flex; justify-content: center; margin-top: 20px;">
+
+                        </div>
                     </div>
                 </div>
             </main>
@@ -553,8 +576,6 @@
 </div>
         `,
 
-
-
         refeitorio: () => `
 <div class="top-bar-custom"></div>
 <div class="page active page-container">
@@ -611,9 +632,27 @@
             <img class="room-control-icon" src="images/icons/icon-small-light-off.svg" alt="Luz">
             <div class="room-control-label">Painéis</div>
         </div>
+        
+        <!-- Controle de Ar Condicionado -->
+        <div style="margin-top: 20px; display: flex; justify-content: center; padding: 0 20px;">
+
+        </div>
     </div>
 </div>
         `,
+
+        clima: () => `
+<div class="top-bar-custom"></div>
+<div class="page active page-container" style="background: linear-gradient(135deg, #1C1C1C 0%, #2A2A2A 100%);">
+    <div class="page-header">
+        <button class="back-btn" onclick="spaNavigate('home')"><img src="images/icons/back-button.svg" alt="Voltar"></button>
+        <h1 class="page-title">Controle de Clima</h1>
+    </div>
+    <div style="display: flex; justify-content: center; align-items: center; min-height: calc(100vh - 200px); padding: 20px;">
+
+    </div>
+</div>
+        `
 
 
     };
@@ -713,10 +752,28 @@
         if (['entrada','vitrine','garden','reuniao','garagem','cafe','gourmet','home-ambiente','recepcao','cinema','piscina','funcionarios'].includes(page)) {
             if (typeof initRoomPage === 'function') initRoomPage();
         }
+        
+        // Inicializar controle de AR nas páginas específicas
+        if (page === 'funcionarios') {
+            setTimeout(() => {
+
+            }, 100);
+        }
+        
+        if (page === 'clima') {
+            setTimeout(() => {
+
+            }, 100);
+        }
 
         // Atualiza o botão master na página de cenários
         if (page === 'scenes') {
             initScenesPage();
+            
+            // Inicializar controle de ar condicionado
+            setTimeout(() => {
+
+            }, 100);
         }
     }
 
@@ -833,6 +890,227 @@
         // Aguardar um pouco após mudança de orientação para garantir layout correto
         setTimeout(updatePageSelectorPosition, 300);
     });
+
+    // 🚀 PWA ENHANCEMENTS
+    
+    // Detectar se é PWA instalado
+    function isPWAInstalled() {
+        return window.matchMedia && window.matchMedia('(display-mode: standalone)').matches ||
+               window.navigator && window.navigator.standalone === true ||
+               document.referrer.includes('android-app://');
+    }
+
+    // Prompt de instalação PWA
+    let deferredPrompt;
+    
+    window.addEventListener('beforeinstallprompt', (e) => {
+        console.log('📱 PWA: Prompt de instalação disponível');
+        e.preventDefault();
+        deferredPrompt = e;
+        
+        // Mostrar botão de instalação se não estiver instalado
+        if (!isPWAInstalled()) {
+            showInstallButton();
+        }
+    });
+
+    function showInstallButton() {
+        // Criar botão de instalação se não existir
+        if (!document.getElementById('pwa-install-btn')) {
+            const installBtn = document.createElement('button');
+            installBtn.id = 'pwa-install-btn';
+            installBtn.innerHTML = '📱 Instalar App';
+            installBtn.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: rgba(255, 255, 255, 0.15);
+                color: white;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                padding: 10px 15px;
+                border-radius: 25px;
+                font-size: 14px;
+                cursor: pointer;
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                z-index: 1000;
+                transition: all 0.3s ease;
+            `;
+            
+            installBtn.addEventListener('click', installPWA);
+            installBtn.addEventListener('mouseenter', function() {
+                this.style.background = 'rgba(255, 255, 255, 0.2)';
+                this.style.transform = 'translateY(-2px)';
+            });
+            installBtn.addEventListener('mouseleave', function() {
+                this.style.background = 'rgba(255, 255, 255, 0.15)';
+                this.style.transform = 'translateY(0)';
+            });
+            
+            document.body.appendChild(installBtn);
+            
+            // Remover após 10 segundos se não clicado
+            setTimeout(() => {
+                if (installBtn.parentNode) {
+                    installBtn.remove();
+                }
+            }, 10000);
+        }
+    }
+
+    async function installPWA() {
+        if (deferredPrompt) {
+            console.log('📱 PWA: Iniciando instalação');
+            
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            
+            console.log(`📱 PWA: Resultado da instalação: ${outcome}`);
+            
+            if (outcome === 'accepted') {
+                console.log('✅ PWA: Instalação aceita pelo usuário');
+            }
+            
+            deferredPrompt = null;
+            
+            // Remover botão de instalação
+            const installBtn = document.getElementById('pwa-install-btn');
+            if (installBtn) {
+                installBtn.remove();
+            }
+        }
+    }
+
+    // Detectar quando PWA é instalado
+    window.addEventListener('appinstalled', () => {
+        console.log('🎉 PWA: App instalado com sucesso');
+        
+        // Remover botão de instalação se existir
+        const installBtn = document.getElementById('pwa-install-btn');
+        if (installBtn) {
+            installBtn.remove();
+        }
+        
+        // Opcional: mostrar toast de confirmação
+        showToast('App instalado com sucesso! 🎉');
+    });
+
+    // Toast simples para notificações
+    function showToast(message, duration = 3000) {
+        const toast = document.createElement('div');
+        toast.textContent = message;
+        toast.style.cssText = `
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            z-index: 10000;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        `;
+        
+        document.body.appendChild(toast);
+        
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.remove();
+            }
+        }, duration);
+    }
+
+    // Monitorar mudanças de conexão
+    function updateOnlineStatus() {
+        const isOnline = navigator.onLine;
+        console.log('🌐 Status da conexão:', isOnline ? 'Online' : 'Offline');
+        
+        if (!isOnline) {
+            showToast('Modo offline ativo 📵', 5000);
+        } else {
+            showToast('Conexão restaurada 🌐');
+        }
+        
+        // Atualizar UI baseado no status
+        document.body.classList.toggle('offline', !isOnline);
+    }
+
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+
+    // Registrar Service Worker com tratamento de erros melhorado
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', async () => {
+            try {
+                const registration = await navigator.serviceWorker.register('/service-worker.js');
+                console.log('✅ SW: Registrado com sucesso', registration.scope);
+                
+                // Verificar atualizações
+                registration.addEventListener('updatefound', () => {
+                    console.log('🔄 SW: Nova versão encontrada');
+                    
+                    const newWorker = registration.installing;
+                    if (newWorker) {
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                console.log('🔄 SW: Nova versão instalada');
+                                showUpdateAvailable();
+                            }
+                        });
+                    }
+                });
+                
+            } catch (error) {
+                console.error('❌ SW: Falha no registro', error);
+            }
+        });
+    }
+
+    function showUpdateAvailable() {
+        const updateBtn = document.createElement('button');
+        updateBtn.innerHTML = '🔄 Atualizar App';
+        updateBtn.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(76, 175, 80, 0.9);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 25px;
+            font-size: 14px;
+            cursor: pointer;
+            z-index: 1000;
+            animation: pulse 2s ease-in-out infinite;
+        `;
+        
+        updateBtn.addEventListener('click', () => {
+            window.location.reload();
+        });
+        
+        document.body.appendChild(updateBtn);
+    }
+
+    // Disponibilizar globalmente para debug
+    window.eletrize = window.eletrize || {};
+    window.eletrize.pwa = {
+        isInstalled: isPWAInstalled,
+        install: installPWA,
+        toast: showToast
+    };
+
+    // Log inicial do status PWA
+    console.log('📱 PWA Status:', {
+        isInstalled: isPWAInstalled(),
+        isOnline: navigator.onLine,
+        hasServiceWorker: 'serviceWorker' in navigator,
+        hasNotifications: 'Notification' in window
+    });
+
     </script>
 </body>
 </html>

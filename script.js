@@ -1541,6 +1541,8 @@ window.debugEletrize = {
             console.log('  localStorage indisponível');
         }
     },
+    // Debug do Ar Condicionado
+
     clearMobileCache: () => {
         console.log('🧹 Limpando cache mobile...');
         try {

@@ -980,4 +980,226 @@ html, body {
     100% { box-shadow: 0 0 5px rgba(76, 175, 80, 0.3); }
 }
 
-/* Debug mobile visual - REMOVIDO (compatibilidade resolvida) */
+/* === PWA ENHANCEMENTS === */
+
+/* Indicador de status offline */
+body.offline::before {
+    content: "📵 Modo Offline";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255, 107, 107, 0.9);
+    color: white;
+    text-align: center;
+    padding: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 10000;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+body.offline .main-content {
+    padding-top: 40px;
+}
+
+/* Animação pulse para botão de atualização */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Botões PWA responsivos */
+#pwa-install-btn,
+.pwa-update-btn {
+    position: fixed;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 10px 15px;
+    border-radius: 25px;
+    font-size: 14px;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 1000;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+#pwa-install-btn {
+    bottom: 20px;
+    right: 20px;
+}
+
+.pwa-update-btn {
+    top: 20px;
+    right: 20px;
+    background: rgba(76, 175, 80, 0.9);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* Splash screen quando PWA carrega */
+.pwa-loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+.pwa-loading.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.pwa-loading .logo {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 20px;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.pwa-loading .text {
+    color: white;
+    font-size: 18px;
+    font-weight: 300;
+    margin-bottom: 10px;
+}
+
+.pwa-loading .subtext {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+}
+
+/* Toasts PWA */
+.pwa-toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-size: 14px;
+    z-index: 10000;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    animation: slideInFromTop 0.3s ease;
+}
+
+@keyframes slideInFromTop {
+    0% {
+        transform: translateX(-50%) translateY(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Ajustes para modo standalone (PWA instalado) */
+@media (display-mode: standalone) {
+    /* Ajustar área segura para dispositivos com notch */
+    .main-content {
+        padding-top: env(safe-area-inset-top);
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+    
+    /* Remover seleção de texto em modo app */
+    body {
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-touch-callout: none;
+    }
+    
+    /* Permitir seleção apenas em inputs */
+    input, textarea {
+        -webkit-user-select: text;
+        user-select: text;
+    }
+    
+    /* Melhorar área de toque */
+    .room-btn, .scene-btn, button {
+        min-height: 44px;
+        min-width: 44px;
+    }
+}
+
+/* Responsividade específica para PWA móvel */
+@media (max-width: 480px) and (display-mode: standalone) {
+    #pwa-install-btn {
+        bottom: 80px; /* Evitar conflito com indicador home */
+        right: 15px;
+        font-size: 12px;
+        padding: 8px 12px;
+    }
+    
+    .pwa-toast {
+        left: 10px;
+        right: 10px;
+        transform: none;
+        max-width: calc(100% - 20px);
+    }
+}
+
+/* Indicadores de carregamento para PWA */
+.pwa-loading-indicator {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Estados de conectividade */
+.connection-status {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.connection-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #51cf66;
+}
+
+.connection-indicator.offline {
+    background: #ff6b6b;
+    animation: blink 1s ease-in-out infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
